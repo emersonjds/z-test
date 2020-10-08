@@ -1,25 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "react-apollo";
+import api from "./services/api";
+
+import { gql } from "apollo-boost";
+import { Query } from "react-apollo";
+
+const GET_PRODUCTS = gql`
+  query {
+    poc(id: 532) {
+      id
+      products {
+        id
+        title
+        rgb
+        images {
+          url
+        }
+      }
+    }
+  }
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ApolloProvider client={api}>
+        <Query query={GET_PRODUCTS}>
+          {({ loading, error, data }) => {
+            if (loading) return <div>Loading...</div>;
+            if (error) return <div>Error :(</div>;
+
+            const products = data.poc.products;
+
+            return (
+              <>
+                {products.map((p) => (
+                  <div key={p.id}>
+                    <p>{p.title}</p>
+                    {p.images.map((image) => (
+                      <img key={p.id} src={image.url} alt={p.title} />
+                    ))}
+                  </div>
+                ))}
+              </>
+            );
+          }}
+        </Query>
+      </ApolloProvider>
+    </>
   );
 }
 
