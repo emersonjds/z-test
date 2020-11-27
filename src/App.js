@@ -40,7 +40,13 @@ function App() {
                   <div key={p.id}>
                     <p>{p.title}</p>
                     {p.images.map((image) => (
-                      <img key={p.id} src={image.url} alt={p.title} />
+                      <img
+                        key={p.id}
+                        src={image.url}
+                        alt={p.title}
+                        height="200"
+                        width="200"
+                      />
                     ))}
                   </div>
                 ))}
